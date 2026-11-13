@@ -98,7 +98,9 @@
   var h = decodeURIComponent(location.hash.slice(1));
   if (h.indexOf('builder') === 0) {
     var p = (h.split('=')[1] || '').split('.');
-    if (p.length === 4) { state.bg = p[0]; state.box = p[1]; state.nm = p[2]; state.line = p[3]; }
+    // ссылка со старым набором: убранный вариант не ломает страницу, остаётся вариант по умолчанию
+    var ok = function (g, id) { var L = g === 'bg' ? D.bgs : D.groups.filter(function (x) { return x.id === g; })[0].options; return L.some(function (o) { return o.id === id; }); };
+    if (p.length === 4) { ['bg', 'box', 'nm', 'line'].forEach(function (g, i) { if (ok(g, p[i])) state[g] = p[i]; }); }
     render(); tab('builder');
   } else { render(); tab('versions'); }
 })();
