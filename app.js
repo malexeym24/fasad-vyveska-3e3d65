@@ -3,6 +3,8 @@
   var GROUPS = D.groups.map(function (g) { return g.id; });
   var state = { bg: 'nikolay', box: 'box_brown', nm: 'nm_panel_red', line: 'cat4_red', guides: false };
   var offsets = {};
+  // есть ли такой вариант в группе (убранные варианты из старых ссылок и версий не ломают страницу)
+  var ok = function (g, id) { var L = g === 'bg' ? D.bgs : D.groups.filter(function (x) { return x.id === g; })[0].options; return L.some(function (o) { return o.id === id; }); };
 
   // ---- tabs
   function tab(t) {
@@ -81,7 +83,7 @@
     return (D.bgs.length > 1 ? 'фон: ' + label('bg', state.bg) + ' | ' : '') + D.groups.map(function (g) { return g.label + ': ' + label(g.id, state[g.id]); }).join(' | ') +
       '  [' + [state.bg, state.box, state.nm, state.line].join('.') + ']';
   }
-  function load(v) { state.bg = v.bg; state.box = v.box; state.nm = v.nm; state.line = v.line; offsets = v.offsets || {}; render(); }
+  function load(v) { ['bg', 'box', 'nm', 'line'].forEach(function (g) { if (ok(g, v[g])) state[g] = v[g]; }); offsets = v.offsets || {}; render(); }
   function writeHash() {
     var t = $('#builder').hidden ? 'versions' : 'builder';
     try { history.replaceState(null, '', '#' + t + (t === 'builder' ? '=' + [state.bg, state.box, state.nm, state.line].join('.') : '')); } catch (e) {}
@@ -98,8 +100,6 @@
   var h = decodeURIComponent(location.hash.slice(1));
   if (h.indexOf('builder') === 0) {
     var p = (h.split('=')[1] || '').split('.');
-    // ссылка со старым набором: убранный вариант не ломает страницу, остаётся вариант по умолчанию
-    var ok = function (g, id) { var L = g === 'bg' ? D.bgs : D.groups.filter(function (x) { return x.id === g; })[0].options; return L.some(function (o) { return o.id === id; }); };
     if (p.length === 4) { ['bg', 'box', 'nm', 'line'].forEach(function (g, i) { if (ok(g, p[i])) state[g] = p[i]; }); }
     render(); tab('builder');
   } else { render(); tab('versions'); }
