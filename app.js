@@ -52,7 +52,7 @@
     });
     ctl.appendChild(r);
   }
-  row('bg', 'Фон', D.bgs);
+  if (D.bgs.length > 1) row('bg', 'Фон', D.bgs);  // один фон - строки выбора нет
   D.groups.forEach(function (g) { row(g.id, g.label, g.options); });
   row('guides', 'Проверка симметрии', [{ id: false, label: 'Без линий' }, { id: true, label: 'Показать центр фасада и центры половин' }]);
 
@@ -78,7 +78,7 @@
     var o = grp.filter(function (x) { return x.id === id; })[0]; return o ? o.label : id;
   }
   function code() {
-    return 'фон: ' + label('bg', state.bg) + ' | ' + D.groups.map(function (g) { return g.label + ': ' + label(g.id, state[g.id]); }).join(' | ') +
+    return (D.bgs.length > 1 ? 'фон: ' + label('bg', state.bg) + ' | ' : '') + D.groups.map(function (g) { return g.label + ': ' + label(g.id, state[g.id]); }).join(' | ') +
       '  [' + [state.bg, state.box, state.nm, state.line].join('.') + ']';
   }
   function load(v) { state.bg = v.bg; state.box = v.box; state.nm = v.nm; state.line = v.line; offsets = v.offsets || {}; render(); }
