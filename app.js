@@ -1,10 +1,11 @@
 (function () {
   var D = window.DATA, $ = function (s) { return document.querySelector(s); };
   var GROUPS = D.groups.map(function (g) { return g.id; });
-  var state = { bg: 'nikolay', box: 'box_brown', nm: 'nm_panel_red', line: 'cat4_red', guides: false };
+  var state = { bg: 'nikolay', box: 'box_santeh', nm: 'nm_panel_red', line: 'cat4_red', guides: false };
   var offsets = {};
   // есть ли такой вариант в группе (убранные варианты из старых ссылок и версий не ломают страницу)
   var ok = function (g, id) { var L = g === 'bg' ? D.bgs : D.groups.filter(function (x) { return x.id === g; })[0].options; return L.some(function (o) { return o.id === id; }); };
+  ['bg'].concat(GROUPS).forEach(function (g) { if (!ok(g, state[g])) state[g] = (g === 'bg' ? D.bgs : D.groups.filter(function (x) { return x.id === g; })[0].options)[0].id; });
 
   // ---- tabs
   function tab(t) {
