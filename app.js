@@ -56,7 +56,7 @@
     ctl.appendChild(r);
   }
   if (D.bgs.length > 1) row('bg', 'Фон', D.bgs);  // один фон - строки выбора нет
-  D.groups.forEach(function (g) { row(g.id, g.label, g.options); });
+  D.groups.forEach(function (g) { if (g.options.length > 1) row(g.id, g.label, g.options); });  // группа с одним вариантом (КОМФОРТ) - без строки выбора
   row('guides', 'Проверка симметрии', [{ id: false, label: 'Без линий' }, { id: true, label: 'Показать центр фасада и центры половин' }]);
 
   function render() {
@@ -81,7 +81,7 @@
     var o = grp.filter(function (x) { return x.id === id; })[0]; return o ? o.label : id;
   }
   function code() {
-    return (D.bgs.length > 1 ? 'фон: ' + label('bg', state.bg) + ' | ' : '') + D.groups.map(function (g) { return g.label + ': ' + label(g.id, state[g.id]); }).join(' | ') +
+    return (D.bgs.length > 1 ? 'фон: ' + label('bg', state.bg) + ' | ' : '') + D.groups.filter(function (g) { return g.options.length > 1; }).map(function (g) { return g.label + ': ' + label(g.id, state[g.id]); }).join(' | ') +
       '  [' + [state.bg, state.box, state.nm, state.line].join('.') + ']';
   }
   function load(v) { ['bg', 'box', 'nm', 'line'].forEach(function (g) { if (ok(g, v[g])) state[g] = v[g]; }); offsets = v.offsets || {}; render(); }
